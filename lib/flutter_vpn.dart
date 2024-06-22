@@ -9,6 +9,8 @@
 /// but WITHOUT ANY WARRANTY; without even the implied warranty of
 /// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 /// Lesser General Public License for more details.
+import 'package:permission_handler/permission_handler.dart';
+
 import 'flutter_vpn_platform_interface.dart';
 import 'state.dart';
 
@@ -32,7 +34,11 @@ class FlutterVpn {
   /// For first connection it will show a dialog to ask for permission.
   /// When your connection was interrupted by another VPN connection,
   /// you should prepare again before reconnect.
-  static Future<bool> prepare() => FlutterVpnPlatform.instance.prepare();
+  static Future<bool> prepare() async {
+    // Ensure to Request Alarm Permissions
+    await [Permission.scheduleExactAlarm].request();
+    return await FlutterVpnPlatform.instance.prepare();
+  }
 
   /// Check if vpn connection has been prepared. (Android only)
   static Future<bool> get prepared => FlutterVpnPlatform.instance.prepared;
